@@ -306,46 +306,58 @@
                 <section class="work-card section-padding pt-0">
                     <div class="container-xxl">
                         <div class="cards">
-                            <div class="card-item">
+                           <div class="card-item"  data-id="1" >
+                                <div class="img fit-img">
+                                    <img src="assets/imgs/portfolio/musolic/1.png" alt="">
+                                    <div class="tags">
+                                        <a href="#0">Branding</a>
+                                        <a href="#0">UI/UX</a>
+                                        <a href="#0">Illustration</a>
+                                    </div>
+                                    <h5 class="bottom">Musoulic</h5>
+                                </div>
+                            </div>
+                             <div class="card-item"  data-id="2">
                                 <div class="img fit-img">
                                     <img src="assets/imgs/portfolio/works3/1.jpg" alt="">
                                     <div class="tags">
-                                        <a href="#0">Development</a>
-                                        <a href="#0">UI/UX</a>
-                                        <a href="#0">illustration</a>
+                                        <a href="#0">Branding</a>
+                                        <a href="#0">UI</a>
+                                    
                                     </div>
-                                    <h5 class="bottom">Unerio Residential</h5>
+                                    <h5 class="bottom">AstroGenius</h5>
                                 </div>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item"  data-id="3">
                                 <div class="img fit-img">
                                     <img src="assets/imgs/portfolio/works3/2.jpg" alt="">
                                     <div class="tags">
-                                        <a href="#0">Mobile Responsive</a>
+                                        <a href="#0">Data Analysis</a>
                                         <a href="#0">UX Design</a>
                                     </div>
-                                    <h5>Archin Studio</h5>
+                                    <h5>Data Science + UX</h5>
                                 </div>
                             </div>
-                            <div class="card-item">
-                                <div class="img fit-img">
-                                    <img src="assets/imgs/portfolio/works3/3.jpg" alt="">
-                                    <div class="tags">
-                                        <a href="#0">UI/UX</a>
-                                        <a href="#0">Webflow</a>
-                                    </div>
-                                    <h5>Jorger Clarkson</h5>
-                                </div>
-                            </div>
-                            <div class="card-item">
+                            <div class="card-item"  data-id="4">
                                 <div class="img fit-img">
                                     <img src="assets/imgs/portfolio/works3/4.jpg" alt="">
                                     <div class="tags">
-                                        <a href="#0">Development</a>
+                                        <a href="#0">Webflow</a>
                                         <a href="#0">UI/UX</a>
-                                        <a href="#0">illustration</a>
+                                        
                                     </div>
-                                    <h5 class="bottom left">DS Freelance</h5>
+                                    <h5 class="bottom left">Widget-Visual Design Challenge</h5>
+                                </div>
+                            </div>
+                            <div class="card-item"  data-id="5">
+                                <div class="img fit-img">
+                                    <img src="assets/imgs/portfolio/works3/4.jpg" alt="">
+                                    <div class="tags">
+                                       
+                                        <a href="#0">UI/UX</a>
+                                        <a href="#0">Research</a>
+                                    </div>
+                                    <h5 class="bottom left">Form Design Challenge</h5>
                                 </div>
                             </div>
                         </div>
@@ -378,7 +390,7 @@
                             <div class="col-lg-5">
                                 <a href="#" class="logo md-mb50">
                                     <img src="assets/imgs/CNOX.svg" alt="">
-                                    <img src="assets/imgs/Crewnox Innovation Labs (1).svg" alt="">
+                                    <img src="assets/imgs/CrewnoxInnovationLabs(1).svg" alt="">
                                 </a>
                             </div>
                             <div class="col-lg-6">
@@ -453,7 +465,15 @@
 
 
 
-
+<script>
+    document.querySelectorAll(".card-item").forEach(card => {
+    card.addEventListener("click", () => {
+      const id = card.getAttribute("data-id");
+      // Navigate to detail page with ID
+      window.location.href = `portfolio-detail.html?id=${id}`;
+    });
+  });
+</script>
 
 
 
