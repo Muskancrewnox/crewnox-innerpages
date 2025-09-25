@@ -319,10 +319,25 @@ figure {
         font-weight: 500;
         letter-spacing: normal;
         line-height: 1.7; }
-
+.menu-toggle{
+	opacity: 0;
+	pointer-events: none;
+	transition: all .4s;
+}
+@media(max-width:992px){
+	.menu-toggle{
+		opacity: 1;
+		pointer-events: auto;
+	}
+}
 @media screen and (max-width: 768px) {
   .hamenu.open .cont-info {
-    display: none; } }
+    display: none; } 
+    .hamenu .menu-links .main-menu > li .link{
+		font-size: 28px;
+	}
+  
+  }
 
 /* ========= [ preloader ]  =========*/
 /* Preloader
