@@ -360,7 +360,7 @@
                         <div class="cat-item active" data-filter="all">All</div>
                         <div class="cat-item" data-filter="branding">Branding</div>
                         <div class="cat-item" data-filter="ui-ux">UI/UX Design</div>
-                        <div class="cat-item" data-filter="webflow">Webflow</div>
+                        <div class="cat-item" data-filter="flipbook">Flipbook</div>
                         <div class="cat-item" data-filter="motion">Motion</div>
                     </div>
                 </div>
@@ -387,7 +387,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 items" data-category="branding ui-ux">
+                            <div class="col-lg-4 items" data-category="branding">
                                 <div class="item" data-id="1">
                                     <div class="cont d-flex align-items-center">
                                         <div>
@@ -428,7 +428,7 @@
                                 <div class="item" data-id="4">
                                     <div class="cont d-flex align-items-center">
                                         <div>
-                                            <h5>Widget-Visual Design Challenge</h5>
+                                            <h5>zero Teq</h5>
                                             <span>branding, ui/ux design, <br> motion, seo</span>
                                         </div>
                                         <div class="ml-auto">
@@ -438,7 +438,7 @@
                                         </div>
                                     </div>
                                     <div class="img">
-                                        <img src="/api/placeholder/400/250" alt="Widget-Visual Design Challenge">
+                                        <img src="assets/imgs/portfolio/xero-teq/image 24.png" alt="Widget-Visual Design Challenge">
                                     </div>
                                 </div>
                             </div>
@@ -842,12 +842,26 @@
 
 
 <script>
-  document.querySelectorAll(".item").forEach(item => {
+ document.addEventListener("DOMContentLoaded", () => {
+  // Select all portfolio cards
+  const portfolioItems = document.querySelectorAll(".item");
+
+  portfolioItems.forEach((item) => {
     item.addEventListener("click", () => {
-      const id = item.getAttribute("data-id"); // get case study ID
-      window.location.href = `portfolio-detail.html?id=${id}`; // redirect to detail page
+      const id = item.getAttribute("data-id");
+      const parent = item.closest(".items"); // find parent div
+      const category = parent ? parent.getAttribute("data-category") : "";
+
+      // Redirect based on category
+      if (category && category.toLowerCase().includes("flipbook")) {
+        window.location.href = `flipbook-detail.html?id=${id}`;
+      } else {
+        window.location.href = `portfolio-detail.html?id=${id}`;
+      }
     });
   });
+});
+
 </script>
 
     <!-- jQuery -->
