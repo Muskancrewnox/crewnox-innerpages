@@ -302,6 +302,39 @@
                                     <h5 class="bottom left">Acadamicae</h5>
                                 </div>
                             </div>
+                              <div class="card-item"  data-id="9">
+                                <div class="img fit-img">
+                                    <img src="assets/imgs/portfolio/acadmicae/acadmicae herosec.png" alt="">
+                                    <div class="tags">
+                                       
+                                        <a href="#0">UI/UX</a>
+                                        <a href="#0">Perfection</a>
+                                    </div>
+                                    <h5 class="bottom left">Beauty Saloon</h5>
+                                </div>
+                            </div>
+                               <div class="card-item"  data-id="10" data-category="flipbook"> 
+                                <div class="img fit-img">
+                                    <img src="assets/imgs/portfolio/tiffs-company/profile.png" alt="">
+                                    <div class="tags">
+                                       
+                                        <a href="#0">UI/UX</a>
+                                        <a href="#0">Perfection</a>
+                                    </div>
+                                    <h5 class="bottom left">Tiffs Company Profile</h5>
+                                </div>
+                            </div>
+                             <div class="card-item"  data-id="11" data-category="flipbook">
+                                <div class="img fit-img">
+                                    <img src="assets/imgs/portfolio/meinstein-flipbook/Profile (1).png" alt="">
+                                    <div class="tags">
+                                       
+                                        <a href="#0">UI/UX</a>
+                                        <a href="#0">Perfection</a>
+                                    </div>
+                                    <h5 class="bottom left">mEinstein Company Profile</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -408,13 +441,20 @@
 
 
 <script>
-    document.querySelectorAll(".card-item").forEach(card => {
-    card.addEventListener("click", () => {
-      const id = card.getAttribute("data-id");
-      // Navigate to detail page with ID
+   document.querySelectorAll(".card-item").forEach(card => {
+  card.addEventListener("click", () => {
+    const id = card.getAttribute("data-id");
+    const category = card.getAttribute("data-category") || "";
+
+    // Redirect based on category
+    if (category.toLowerCase().includes("flipbook")) {
+      window.location.href = `flipbook-detail.html?id=${id}`;
+    } else {
       window.location.href = `portfolio-detail.html?id=${id}`;
-    });
+    }
   });
+});
+
 </script>
 
 

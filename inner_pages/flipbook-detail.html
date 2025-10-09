@@ -12,7 +12,7 @@
     <meta name="author" content="">
 
     <!-- Title  -->
-    <title>Blog Details</title>
+    <title>Flipbook Project Details</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="assets/imgs/favicon.ico">
@@ -32,10 +32,32 @@
 
 
 
+/* FLIPBOOK FIX: start invisible, fixed size */
 .flipbook {
-    width: 848px;
-    height: 580px;
+  width: 848px;
+  height: 580px;
+  margin: 0 auto;
+  overflow: hidden;
+  background-color: #111;
+  opacity: 0; /* hide until ready */
+  transition: opacity 0.4s ease;
 }
+
+/* ensures no stretching before pages render */
+.flipbook-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center; /* vertically center */
+  transition: justify-content 0.45s ease, padding-left 0.45s ease;
+  width: 100%;
+  min-height: 580px; /* fixes the height while loading */
+}
+
+/* when centered (after first page turn) */
+.flipbook-wrapper.centered {
+  justify-content: center;
+}
+
 
 .flipbook .hard {
     background: #c0392b !important;
@@ -78,6 +100,63 @@
   z-index: 1;
   isolation: isolate;
 }
+.flip-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.flip-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+.flip-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Flipbook alignment transition --- */
+/* wrapper controls alignment. Start left, then center when .centered added */
+.flipbook-wrapper {
+  display: flex;
+  justify-content: flex-start; /* START LEFT */
+  transition: justify-content 0.45s ease, padding-left 0.45s ease;
+  width: 100%;
+  /* optionally align to column left flush: */
+  padding-left: 0;
+}
+
+/* when we want the book centered */
+.flipbook-wrapper.centered {
+  justify-content: center; /* CENTER */
+}
+
+/* ensure the flipbook itself has no auto margins */
+.flipbook {
+  .flipbook {
+  width: 848px;
+  height: 580px;
+  margin: 0 auto;
+  overflow: hidden;
+  background-color: #111; /* optional – looks smoother */
+  opacity: 0;             /* start hidden */
+  transition: opacity 0.4s ease;
+}
+
+}
+
+/* keep controls look */
+
+.flip-btn:disabled { opacity: .45; cursor: not-allowed; }
+
 
 </style>
 </head>
@@ -242,7 +321,7 @@
                     <div class="container">
                         <div class="caption mb-80 text-center">
                             <h1 style="font-size: 1.8; text-align: left;" id="flipbook-title"></h1>
-                            <p style="text-align: left; margin:10px 0;"> Flip The pages to see Complete Project</p>
+                            <p style="text-align: left; margin:10px 0;"> Click, flip, and explore the project</p>
                         </div>
                     </div>
                    
@@ -260,7 +339,24 @@
                             <div class="col-lg-8">
                                 
                                 <div class="main-post">
-                                     <div class="flipbook"></div>
+                                  <div class="flipbook-container" id="flipbook-container">
+  <!-- wrapper controls alignment -->
+  <div id="flipbook-wrapper" class="flipbook-wrapper">
+    <!-- actual book (NO mx-auto, NO text-center) -->
+    <div id="flipbook" class="flipbook"></div>
+  </div>
+
+  <!-- controls -->
+  <div class="flipbook-controls mt-4 d-flex justify-content-center gap-4">
+    <button id="prev-page" class="flip-btn" disabled aria-label="Previous page">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <button id="next-page" class="flip-btn" aria-label="Next page">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+</div>
+
                                 </div>
                             </div>
                             <div class="col-lg-4">
@@ -298,7 +394,7 @@
                                     <div class="d-flex">
                                         <a href="portfolio-layout3.html" class="butn butn-md butn-bord butn-rounded ml-auto" target="_blank">
                                             <div class="d-flex align-items-center">
-                                                <span>All Case studies</span>
+                                                <span>All Projects</span>
                                                 <span class="icon ml-20">
                                                     <i class="fa-solid fa-chevron-right"></i>
                                                 </span>
@@ -530,18 +626,16 @@
     </div>
 
 
-<script src="assets/js/jquery.js"></script>
-
-<!-- 2. turn.js -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="assets/js/turn.js"></script>
-
-<!-- 3. PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-<script>
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  // Portfolio data
+<script>
+  // make sure pdfjs worker path is set BEFORE using pdfjsLib
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
   const projects = [
     {
       id: 10,
@@ -568,106 +662,149 @@
       thumbnail: "assets/imgs/portfolio/project3/thumb.jpg",
       short: "Short description for Project C",
       pdfUrl: ""
-    },
-    // Add more projects as needed
+    }
   ];
 
-  // Get current project ID from URL
   const params = new URLSearchParams(window.location.search);
   const currentId = parseInt(params.get("id"));
   const currentProject = projects.find(p => p.id === currentId);
 
- const titleEl = document.getElementById("flipbook-title");
+  // set header title if element exists
+  const titleEl = document.getElementById("flipbook-title");
+  if (currentProject && titleEl) titleEl.textContent = currentProject.headerTitle || currentProject.title;
 
-if (currentProject) {
-  // If headerTitle exists, use it — otherwise fallback to title
-  if (titleEl) {
-    titleEl.textContent = currentProject.headerTitle || currentProject.title;
-  }
-}
+  // helper references
+  const $wrapper = $("#flipbook-wrapper");
+  const $flipbook = $("#flipbook");
+  const $next = $("#next-page");
+  const $prev = $("#prev-page");
 
-    // Load flipbook PDF
-   async function loadPDF(url) {
+  async function loadPDF(url) {
+    if (!url) {
+      $flipbook.parent().html("<p>No flipbook available for this project.</p>");
+      return;
+    }
+
+    // load document
     const pdfDoc = await pdfjsLib.getDocument(url).promise;
-    const $flipbook = $('.flipbook');
+
+    // clear book
     $flipbook.empty();
 
-    // Render pages sequentially
+    // render each page into an <img> and append
     for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-        const page = await pdfDoc.getPage(pageNum);
-        const viewport = page.getViewport({ scale: 1.0 });
-        
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+      const page = await pdfDoc.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 1.0 });
 
-        await page.render({ canvasContext: context, viewport }).promise;
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
 
-        const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/jpeg', 0.85);
-        img.alt = '';
+      await page.render({ canvasContext: ctx, viewport }).promise;
 
-        const $div = $('<div class="page"></div>').append(img);
-        $flipbook.append($div);
+      const img = document.createElement("img");
+      img.src = canvas.toDataURL("image/jpeg", 0.85);
+      img.alt = `Page ${pageNum}`;
+
+      const $pageDiv = $('<div class="page"></div>').append(img);
+      $flipbook.append($pageDiv);
     }
 
-    // Initialize turn.js only after all pages are appended
-  $(".flipbook").turn({
-  width: 800,
-  height: 600,
-  autoCenter: false, // stop automatic shifting
-  when: {
-    turning: function(event, page, view) {
-      const book = $(this);
-      const totalPages = book.turn("pages");
-
-      // On second-to-last page click → center it manually before close
-      if (page === totalPages) {
-        book.css("margin", "0 auto"); // keep centered
+    // Initialize turn.js after pages appended.
+    // IMPORTANT: set autoCenter: false — we will center via wrapper class.
+    // wrap in small timeout to allow DOM reflow if needed.
+    setTimeout(() => {
+      // destroy existing instance if present (safer)
+      if ($flipbook.data('turn')) {
+        try { $flipbook.turn('destroy').html($flipbook.html()); } catch(e) {}
       }
-    },
-    turned: function(event, page, view) {
-      const book = $(this);
-      const totalPages = book.turn("pages");
 
-      // When fully closed (last page turned)
-    
+      $flipbook.turn({
+        width: 848,
+        height: 580,
+        autoCenter: false, // let wrapper control alignment
+        display: 'double' // optional: shows 2-page spreads; change if you want single pages
+      });
+ $flipbook.css("opacity", "1");
+      // update button enabled state
+      function updateButtons() {
+        const total = $flipbook.turn("pages");
+        const page = $flipbook.turn("page");
+        $prev.prop("disabled", page === 1);
+        $next.prop("disabled", page === total);
+      }
+
+      // on turning: if moving past page 1 -> add center class; if to page 1 -> remove
+      $flipbook.on("turning", function(e, page, view) {
+        // if destination page > 1 -> center the book
+        if (page > 1) {
+          if (!$wrapper.hasClass("centered")) $wrapper.addClass("centered");
+        } else {
+          if ($wrapper.hasClass("centered")) $wrapper.removeClass("centered");
+        }
+      });
+
+      // when turned: update buttons
+      $flipbook.on("turned", function() {
+        updateButtons();
+      });
+
+      // buttons
+      $next.off("click").on("click", function() {
+        $flipbook.turn("next");
+      });
+      $prev.off("click").on("click", function() {
+        $flipbook.turn("previous");
+      });
+
+      // initial state:
+      // make sure wrapper state is based on starting page (if you open after page 1 via URL)
+      const startPage = $flipbook.turn("page") || 1;
+      if (startPage > 1) $wrapper.addClass("centered");
+      else $wrapper.removeClass("centered");
+
+      updateButtons();
+    }, 120);
+  }
+
+  $(document).ready(function () {
+    if (currentProject && currentProject.category === "flipbook") {
+      loadPDF(currentProject.pdfUrl).catch(err => {
+        console.error("PDF load error:", err);
+        $flipbook.parent().html("<p>Error loading flipbook.</p>");
+      });
+    } else {
+      // show fallback if not flipbook
+      document.querySelector(".main-post").innerHTML = "<p>No flipbook available for this project.</p>";
     }
-  }
-});
 
-}
-
-$(document).ready(function() {
-    if(currentProject && currentProject.category === "flipbook") {
-        loadPDF(currentProject.pdfUrl);
-    
-
-
-  } else {
-    document.querySelector(".main-post").innerHTML = "<p>No flipbook available for this project.</p>";
-  }
-});
-  // Populate Popular Projects (flipbook category only, exclude current)
-  const popularDiv = document.getElementById("popular-projects");
-  projects.filter(p => p.category === "flipbook" && p.id !== currentId)
-    .forEach(p => {
-      popularDiv.innerHTML += `
-        <div class="item d-flex align-items-center">
-          <div class="img">
-            <a href="flipbook-detail.html?id=${p.id}">
-              <img src="${p.thumbnail}" alt="${p.title}">
-            </a>
+    // populate popular list
+    const popularDiv = document.getElementById("popular-projects");
+    projects
+      .filter(p => p.category === "flipbook" && p.id !== currentId)
+      .forEach(p => {
+        popularDiv.innerHTML += `
+          <div class="item d-flex align-items-center">
+            <div class="img">
+              <a href="flipbook-detail.html?id=${p.id}">
+                <img src="${p.thumbnail}" alt="${p.title}">
+              </a>
+            </div>
+            <div class="cont">
+              <h6><a href="flipbook-detail.html?id=${p.id}">${p.title}</a></h6>
+              <p>${p.short}</p>
+            </div>
           </div>
-          <div class="cont">
-            <h6><a href="flipbook-detail.html?id=${p.id}">${p.title}</a></h6>
-            <p>${p.short}</p>
-          </div>
-        </div>
-      `;
-    });
+        `;
+      });
+  });
 </script>
+
+
+
+
+
 
 
     <!-- jQuery -->
@@ -691,4 +828,4 @@ $(document).ready(function() {
 
 </body>
 
-</html>
+</html>     
