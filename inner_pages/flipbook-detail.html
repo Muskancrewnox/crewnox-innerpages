@@ -140,8 +140,10 @@
 }
 
 /* ensure the flipbook itself has no auto margins */
-.flipbook {
+
   .flipbook {
+    display: flex;
+    justify-content: left;
   width: 848px;
   height: 580px;
   margin: 0 auto;
@@ -151,7 +153,7 @@
   transition: opacity 0.4s ease;
 }
 
-}
+
 
 /* keep controls look */
 
@@ -341,7 +343,7 @@
                                 <div class="main-post">
                                   <div class="flipbook-container" id="flipbook-container">
   <!-- wrapper controls alignment -->
-  <div id="flipbook-wrapper" class="flipbook-wrapper">
+  <div id="flipbook-wrapper" class="flipbook-wrapper" >
     <!-- actual book (NO mx-auto, NO text-center) -->
     <div id="flipbook" class="flipbook"></div>
   </div>
@@ -632,7 +634,6 @@
 
 
 <script>
-  // make sure pdfjs worker path is set BEFORE using pdfjsLib
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -669,11 +670,9 @@
   const currentId = parseInt(params.get("id"));
   const currentProject = projects.find(p => p.id === currentId);
 
-  // set header title if element exists
   const titleEl = document.getElementById("flipbook-title");
   if (currentProject && titleEl) titleEl.textContent = currentProject.headerTitle || currentProject.title;
 
-  // helper references
   const $wrapper = $("#flipbook-wrapper");
   const $flipbook = $("#flipbook");
   const $next = $("#next-page");
@@ -685,13 +684,9 @@
       return;
     }
 
-    // load document
     const pdfDoc = await pdfjsLib.getDocument(url).promise;
-
-    // clear book
     $flipbook.empty();
 
-    // render each page into an <img> and append
     for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
       const page = await pdfDoc.getPage(pageNum);
       const viewport = page.getViewport({ scale: 1.0 });
@@ -711,11 +706,7 @@
       $flipbook.append($pageDiv);
     }
 
-    // Initialize turn.js after pages appended.
-    // IMPORTANT: set autoCenter: false — we will center via wrapper class.
-    // wrap in small timeout to allow DOM reflow if needed.
     setTimeout(() => {
-      // destroy existing instance if present (safer)
       if ($flipbook.data('turn')) {
         try { $flipbook.turn('destroy').html($flipbook.html()); } catch(e) {}
       }
@@ -723,11 +714,14 @@
       $flipbook.turn({
         width: 848,
         height: 580,
-        autoCenter: false, // let wrapper control alignment
-        display: 'double' // optional: shows 2-page spreads; change if you want single pages
+        autoCenter: false,
+        display: 'double',
+        gradients: true, // ✅ keep corner curl hover
+        acceleration: true
       });
- $flipbook.css("opacity", "1");
-      // update button enabled state
+
+      $flipbook.css("opacity", "1");
+
       function updateButtons() {
         const total = $flipbook.turn("pages");
         const page = $flipbook.turn("page");
@@ -735,22 +729,18 @@
         $next.prop("disabled", page === total);
       }
 
-      // on turning: if moving past page 1 -> add center class; if to page 1 -> remove
-      $flipbook.on("turning", function(e, page, view) {
-        // if destination page > 1 -> center the book
+      $flipbook.on("turning", function(e, page) {
         if (page > 1) {
-          if (!$wrapper.hasClass("centered")) $wrapper.addClass("centered");
+          $wrapper.addClass("centered");
         } else {
-          if ($wrapper.hasClass("centered")) $wrapper.removeClass("centered");
+          $wrapper.removeClass("centered");
         }
       });
 
-      // when turned: update buttons
       $flipbook.on("turned", function() {
         updateButtons();
       });
 
-      // buttons
       $next.off("click").on("click", function() {
         $flipbook.turn("next");
       });
@@ -758,8 +748,28 @@
         $flipbook.turn("previous");
       });
 
-      // initial state:
-      // make sure wrapper state is based on starting page (if you open after page 1 via URL)
+      // ✅ Fix: allow click anywhere but still keep hover corners active
+      $flipbook.off("click.pageClick").on("click.pageClick", function (e) {
+        // prevent double-trigger when Turn.js corner click happens
+        if ($(e.target).closest('.page').length === 0) return;
+
+        const offset = $(this).offset();
+        const x = e.pageX - offset.left;
+        const bookWidth = $(this).width();
+
+        const cornerZone = 80; // hover-sensitive corner area (px)
+
+        // if click is near corner, let Turn.js handle it naturally
+        if (x < cornerZone || x > bookWidth - cornerZone) return;
+
+        // otherwise, flip manually like natural click
+        if (x < bookWidth / 2) {
+          $flipbook.turn("previous");
+        } else {
+          $flipbook.turn("next");
+        }
+      });
+
       const startPage = $flipbook.turn("page") || 1;
       if (startPage > 1) $wrapper.addClass("centered");
       else $wrapper.removeClass("centered");
@@ -775,11 +785,9 @@
         $flipbook.parent().html("<p>Error loading flipbook.</p>");
       });
     } else {
-      // show fallback if not flipbook
       document.querySelector(".main-post").innerHTML = "<p>No flipbook available for this project.</p>";
     }
 
-    // populate popular list
     const popularDiv = document.getElementById("popular-projects");
     projects
       .filter(p => p.category === "flipbook" && p.id !== currentId)
@@ -800,6 +808,8 @@
       });
   });
 </script>
+
+
 
 
 
