@@ -674,11 +674,11 @@
       id: 13,
       title: "mE App",
       category: "flipbook",
-      thumbnail: "assets/imgs/portfolio/me-app",
+      thumbnail: "assets/imgs/portfolio/me-app.png",
       short: "meinstein",
       pdfUrl: "assets/pdf/me-app.pdf"
     },
-     {
+    {
       id: 14,
       title: "mE Marketplace",
       category: "flipbook",
@@ -693,7 +693,8 @@
   const currentProject = projects.find(p => p.id === currentId);
 
   const titleEl = document.getElementById("flipbook-title");
-  if (currentProject && titleEl) titleEl.textContent = currentProject.headerTitle || currentProject.title;
+  if (currentProject && titleEl)
+    titleEl.textContent = currentProject.headerTitle || currentProject.title;
 
   const $wrapper = $("#flipbook-wrapper");
   const $flipbook = $("#flipbook");
@@ -729,20 +730,35 @@
     }
 
     setTimeout(() => {
-      if ($flipbook.data('turn')) {
-        try { $flipbook.turn('destroy').html($flipbook.html()); } catch(e) {}
+      if ($flipbook.data("turn")) {
+        try {
+          $flipbook.turn("destroy").html($flipbook.html());
+        } catch (e) {}
       }
 
       $flipbook.turn({
         width: 848,
         height: 580,
         autoCenter: false,
-        display: 'double',
-        gradients: true, // ✅ keep corner curl hover
+        display: "double",
+        gradients: true, // ✅ keeps corner hover animation
         acceleration: true
       });
 
       $flipbook.css("opacity", "1");
+
+      // ✅ Automatically adjust height based on current page
+      function adjustFlipbookHeight() {
+        const currentPage = $flipbook.turn("page");
+        const $currentImg = $flipbook.find(`.page:nth-child(${currentPage}) img`);
+        if ($currentImg.length) {
+          const newHeight = $currentImg.height();
+          if (newHeight && Math.abs($flipbook.height() - newHeight) > 10) {
+            $flipbook.turn("size", 848, newHeight);
+            $wrapper.css("height", newHeight + "px");
+          }
+        }
+      }
 
       function updateButtons() {
         const total = $flipbook.turn("pages");
@@ -751,41 +767,38 @@
         $next.prop("disabled", page === total);
       }
 
-      $flipbook.on("turning", function(e, page) {
-        if (page > 1) {
-          $wrapper.addClass("centered");
-        } else {
-          $wrapper.removeClass("centered");
-        }
+      // ✅ Handle left/right alignment
+      $flipbook.on("turning", function (e, page) {
+        if (page > 1) $wrapper.addClass("centered");
+        else $wrapper.removeClass("centered");
       });
 
-      $flipbook.on("turned", function() {
+      // ✅ On page turned → adjust height + update buttons
+      $flipbook.on("turned", function () {
         updateButtons();
+        adjustFlipbookHeight();
       });
 
-      $next.off("click").on("click", function() {
+      // ✅ Arrows
+      $next.off("click").on("click", function () {
         $flipbook.turn("next");
       });
-      $prev.off("click").on("click", function() {
+      $prev.off("click").on("click", function () {
         $flipbook.turn("previous");
       });
 
-      // ✅ Fix: allow click anywhere but still keep hover corners active
+      // ✅ Click anywhere to turn (still keeps corner animation!)
       $flipbook.off("click.pageClick").on("click.pageClick", function (e) {
-        // prevent double-trigger when Turn.js corner click happens
-        if ($(e.target).closest('.page').length === 0) return;
-
         const offset = $(this).offset();
         const x = e.pageX - offset.left;
-        const bookWidth = $(this).width();
+        const width = $(this).width();
+        const cornerZone = 80; // zone for corner hover — leave untouched
 
-        const cornerZone = 80; // hover-sensitive corner area (px)
+        // If clicked inside corners → let turn.js handle it
+        if (x < cornerZone || x > width - cornerZone) return;
 
-        // if click is near corner, let Turn.js handle it naturally
-        if (x < cornerZone || x > bookWidth - cornerZone) return;
-
-        // otherwise, flip manually like natural click
-        if (x < bookWidth / 2) {
+        // Otherwise flip manually
+        if (x < width / 2) {
           $flipbook.turn("previous");
         } else {
           $flipbook.turn("next");
@@ -797,7 +810,8 @@
       else $wrapper.removeClass("centered");
 
       updateButtons();
-    }, 120);
+      adjustFlipbookHeight();
+    }, 150);
   }
 
   $(document).ready(function () {
@@ -807,7 +821,8 @@
         $flipbook.parent().html("<p>Error loading flipbook.</p>");
       });
     } else {
-      document.querySelector(".main-post").innerHTML = "<p>No flipbook available for this project.</p>";
+      document.querySelector(".main-post").innerHTML =
+        "<p>No flipbook available for this project.</p>";
     }
 
     const popularDiv = document.getElementById("popular-projects");
@@ -830,6 +845,7 @@
       });
   });
 </script>
+
 
 
 
