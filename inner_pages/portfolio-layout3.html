@@ -33,7 +33,34 @@
     <!-- Core Style Css -->
     <link rel="stylesheet" href="../common/css/common_style.css">
     <link rel="stylesheet" href="assets/css/inner_pages.css">
-<style>.item { cursor: pointer; }</style>
+<style>.item { cursor: pointer; }
+  
+.gallery .col-lg-4 {
+  height: fit-content;
+}
+.works-mp .row{
+    margin-top: 0 !important;
+}
+/* .row.md-marg.gallery#portfolio-container{
+    height: fit-content !important;
+} */
+#portfolio-container {
+  overflow: hidden;
+  transition: height 0.4s ease-in-out;
+}
+#portfolio-container {
+  transition: height 0.35s ease, opacity 0.3s ease;
+}
+
+.fade-transition {
+  opacity: 0;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+</style>
 </head>
 
 <body>
@@ -961,20 +988,29 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Initially bind clicks
+  // Bind initial clicks
   bindPortfolioClick();
 
   // Filter logic
   categoryButtons.forEach(button => {
     button.addEventListener('click', function() {
+      // Active category highlight
       categoryButtons.forEach(btn => btn.classList.remove('active'));
       this.classList.add('active');
 
       const filterValue = this.getAttribute('data-filter');
       portfolioContainer.classList.add('fade-transition');
 
+      // Capture current height before content changes
+      const currentHeight = portfolioContainer.scrollHeight;
+      portfolioContainer.style.height = currentHeight + "px";
+      portfolioContainer.style.transition = "height 0.35s ease, opacity 0.3s ease";
+      portfolioContainer.style.overflow = "hidden";
+
       setTimeout(() => {
-        portfolioContainer.innerHTML = originalHTML;
+        // Replace content with original
+        portfolioContainer.innerHTML = originalHTML.trim();
+
         const allItems = portfolioContainer.querySelectorAll('.items');
 
         if (filterValue !== 'all') {
@@ -986,19 +1022,40 @@ document.addEventListener("DOMContentLoaded", function() {
           });
         }
 
-        // Re-bind click events after filtering
+        // Remove unwanted text nodes (to prevent gaps)
+        portfolioContainer.childNodes.forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE && !node.textContent.trim()) {
+            node.remove();
+          }
+        });
+
+        // Rebind portfolio clicks
         bindPortfolioClick();
 
+        // Smoothly adjust height to new content
+        const newHeight = portfolioContainer.scrollHeight;
+        portfolioContainer.style.height = newHeight + "px";
+
+        // Smooth fade back in
         setTimeout(() => {
           portfolioContainer.classList.remove('fade-transition');
           portfolioContainer.classList.add('fade-in');
-          setTimeout(() => portfolioContainer.classList.remove('fade-in'), 300);
+
+          // Restore normal flow after animation
+          setTimeout(() => {
+            portfolioContainer.style.height = "auto";
+            portfolioContainer.style.overflow = "";
+            portfolioContainer.classList.remove('fade-in');
+          }, 350);
         }, 50);
-      }, 300);
+      }, 250);
     });
   });
 });
 </script>
+
+
+
 
 
     <!-- jQuery -->
