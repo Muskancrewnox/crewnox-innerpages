@@ -33,7 +33,134 @@
     <!-- Core Style Css -->
     <link rel="stylesheet" href="../common/css/common_style.css">
     <link rel="stylesheet" href="assets/css/inner_pages.css">
+<style>
+     /* Marquee Wrapper */
+        .marquee-wrapper {
+            overflow: hidden;
+            position: relative;
+           
+            padding: 40px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
 
+        .marquee-wrapper::before,
+        .marquee-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .marquee-wrapper::before {
+            left: 0;
+           
+        }
+
+        .marquee-wrapper::after {
+            right: 0;
+           
+        }
+
+        /* Marquee Animation */
+        .marquee-container {
+          
+  display: flex;
+  width: max-content;
+  
+
+            animation: scroll 20s linear infinite;
+        }
+
+        .marquee-container:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+           
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Keep your original row structure */
+       .marquee-container .row {
+            display: flex;
+            flex-wrap: nowrap;
+           margin-left: 20px;
+            gap: 20px;
+        }
+
+        .sm-marg {
+            margin: 0 -15px;
+        }
+
+        .col-lg, .col-md-4, .col-6 {
+            flex-shrink: 0;
+            padding: 0 40px;
+            min-width: 250px;
+        }
+
+        .md-mb30 {
+            margin-bottom: 30px;
+        }
+
+        .sm-mb30 {
+            margin-bottom: 30px;
+        }
+
+        .item {
+           
+            transition: transform 0.3s ease;
+        }
+
+        .item:hover {
+            transform: scale(1.1);
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .justify-content-center {
+            justify-content: center;
+        }
+        .img{
+            height: 100px;
+            display:flex ;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .img img {
+            max-width: 160px;
+            min-width: 160px;
+            width: 100%;
+            height: auto;
+          
+            transition: all 0.3s ease;
+        }
+
+      
+
+        @media (max-width: 768px) {
+            .marquee-container {
+                animation-duration: 15s;
+            }
+        }
+       
+
+</style>
 </head>
 
 <body>
@@ -1187,39 +1314,175 @@
                                 <div class="sec-head mb-80">
                                     <h6 class="sub-head">Partnered with 80+ Clients</h6>
                                 </div>
-                                <div class="row sm-marg">
-                                    
-                                    <div class="col-lg col-md-4 col-6 md-mb30">
-                                        <div class="item d-flex align-items-center justify-content-center">
-                                            <div class="img">
-                                                <img src="assets/imgs/about/clients/meinstein.svg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg col-md-4 col-6 md-mb30">
-                                        <div class="item d-flex align-items-center justify-content-center">
-                                            <div class="img">
-                                                <img src="assets/imgs/about/clients/acadamicae.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg col-md-4 col-6 sm-mb30">
-                                        <div class="item d-flex align-items-center justify-content-center">
-                                            <div class="img">
-                                                <img src="assets/imgs/about/clients/Helloteacher.png" alt="" height="80px">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg col-md-4 col-6">
-                                        <div class="item d-flex align-items-center justify-content-center">
-                                            <div class="img">
-                                                <img src="assets/imgs/about/clients/Coding-shark.png" alt="" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        <div class="marquee-wrapper">
+            <div class="marquee-container">
+                <!-- Original row - First set -->
+                <div class="row sm-marg">
+                    <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/meinstein.svg" alt="">
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/acadamicae.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                       <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Helloteacher.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                   
+                       <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Coding-shark.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/tiffs.png" alt="" height="100px !important">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Zeroteq.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Musolic.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/navex logo.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                       <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/invoiq.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/teledigital.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/mchl.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Duplicate row for seamless loop -->
+                <div class="row sm-marg">
+                    <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/meinstein.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/acadamicae.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-6 sm-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Helloteacher.png" alt="" height="80px">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 sm-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Coding-shark.png" alt="" height="80px">
+                            </div>
+                        </div>
+                    </div>
+
+                   <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/tiffs logo (1).png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Zeroteq.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/Musolic.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/navex logo.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/invoiq.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/teledigital.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-lg col-md-4 col-6 md-mb30">
+                        <div class="item d-flex align-items-center justify-content-center">
+                            <div class="img">
+                                <img src="assets/imgs/about/clients/mchl.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                        
 
                         <!-- ==================== End clients ==================== -->
 
