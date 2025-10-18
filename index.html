@@ -45,7 +45,35 @@
     <link rel="stylesheet" href="common/css/common_style.css" />
     <link rel="stylesheet" href="src/assets/css/home2-style.css" />
     <style>
-      
+     
+      .header-ds .container{
+        overflow-x: hidden;
+      }
+    
+      .works-mp{
+        overflow-x: hidden !important;
+      }
+      .marquee{
+        overflow-x: hidden
+      }
+      .main-marq{
+        overflow-x: hidden !important ;
+      }
+      .main-marq .item {
+        overflow-x: hidden !important;
+      }
+       @media (max-width: 768px) {
+        .mobile-container {
+          width: 100vw;
+          max-width: 100vw;
+          overflow-x: hidden;
+          position: relative;
+        }}
+      @media(max-width:575px){
+          .header-ds .container .col-lg-5{
+        overflow-x: hidden;
+      }
+      }
       @media(max-width:475px){
       .about-ma .content .item .botm h2{
         font-size: 70px;
@@ -59,7 +87,7 @@
 
   <body id="body">
     <!-- ==================== Start Loading ==================== -->
-
+<div class="mobile-container">
     <div class="loader-wrap">
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
         <path id="svg" d="M0,1005S175,995,500,995s500,5,500,5V0H0Z"></path>
@@ -1757,7 +1785,7 @@
           </div>
           <!-- Brands Section Finish -->
           <!-- Contact Us page -->
-          <section class="contact-us" id="contact">
+          <!-- <section class="contact-us" id="contact">
             <div class="contact-sa pt-0">
               <div class="container">
                 <div class="box">
@@ -1883,7 +1911,7 @@
                 </div>
               </div>
             </div>
-          </section>
+          </section> -->
           <!-- Contact Us page Ends -->
 
           <!-- Crewnox theme -->
@@ -1943,7 +1971,7 @@
                   <div
                     class="buton d-flex align-items-center justify-content-center"
                   >
-                    <a href="#0">
+                    <a href="inner_pages/contact.html">
                       <span class="mb-10">Contact</span> <br />
                       <span
                         >Us
@@ -2046,7 +2074,7 @@
         </main>
       </div>
     </div>
-
+</div>
     <!-- <div style="width: 1000px; height: 200vh; background: red"></div> -->
 
     <!-- jQuery -->
@@ -2072,4 +2100,5 @@
     <script src="src/assets/js/about.js"></script>
     <script src="src/assets/js/contact.js"></script>
   </body>
+
 </html>
