@@ -164,7 +164,20 @@
 /* keep controls look */
 
 .flip-btn:disabled { opacity: .45; cursor: not-allowed; }
-
+@media(max-width:425px){
+  .flipbook-controls{
+    margin-top: 0;
+  }
+  .caption.mb-80.text-center{
+    margin-bottom: 0 !important;
+  }
+  .flipbook-wrapper{
+    justify-content: center;
+    align-items: start;
+    min-height: fit-content;
+    height: fit-content !important;
+  }
+}
 
 </style>
 </head>
@@ -327,7 +340,7 @@
 
                    <header class="blog-hed section-padding pb-0">
                     <div class="container">
-                        <div class="caption mb-80 text-center">
+                        <div class="caption  text-center">
                             <h1 style="font-size: 1.8; text-align: left;" id="flipbook-title"></h1>
                             <p style="text-align: left; margin:10px 0;"> Click, flip, and explore the project</p>
                         </div>
