@@ -39,13 +39,21 @@
   a{
     cursor: pointer;
   }
+  @media(max-width:768px){
+    .mobile-container {
+          width: 100vw;
+          max-width: 100vw;
+          overflow-x: hidden;
+          position: relative;
+        }
+  }
 </style>
 </head>
 
 <body>
 
 
-
+<div class="mobile-container">
     <!-- ==================== Start Loading ==================== -->
 
     <div class="loader-wrap">
@@ -1225,7 +1233,7 @@
 
 
 
-
+</div>
 
 
 

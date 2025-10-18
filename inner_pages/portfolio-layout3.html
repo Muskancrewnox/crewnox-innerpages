@@ -59,13 +59,20 @@
 .fade-in {
   opacity: 1;
 }
-
+ @media(max-width:768px){
+    .mobile-container {
+          width: 100vw;
+          max-width: 100vw;
+          overflow-x: hidden;
+          position: relative;
+        }
+  }
 </style>
 </head>
 
 <body>
 
-
+<div class="mobile-container">
 
     <!-- ==================== Start Loading ==================== -->
 
@@ -950,7 +957,7 @@
               </footer>
 
             <!-- ==================== End Footer ==================== -->
-
+        </div>
 
         </div>
 
